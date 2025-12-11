@@ -1,0 +1,16 @@
+{
+  "name": "facebook-group-bot",
+  "version": "1.0.0",
+  "description": "A compliant Facebook Group posting bot for insurance services.",
+  "main": "facebook_bot.js",
+  "scripts": {
+    "start": "node facebook_bot.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3"
+  },
+  "author": "",
+  "license": "ISC"
+}
