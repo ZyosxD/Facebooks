@@ -1,78 +1,65 @@
-# Facebook Group Automation Bot
+# Facebook Group Automation Bot V2.0
 
-This project is a Node.js bot designed to automate daily posts to Facebook Groups for insurance services. It is designed to be compliant with Facebook's Community Standards and Anti-Spam policies.
+A modular, highly compliant Node.js bot designed to automate daily posts to Facebook Groups for insurance services.
 
-## ⚠️ Important Compliance Warning
+## ✨ New Features in V2.0
+- **Modular Architecture:** Easy to maintain and upgrade.
+- **Magistral Logging:** Beautiful, color-coded terminal output using `chalk` to keep you informed of every action.
+- **Enhanced Configuration:** centralized config in `src/config.js`.
 
-**To avoid account bans:**
-1.  **Do not spam.** Keep posting frequency low (e.g., once a day).
-2.  **Vary your content.** Do not post the exact same text and image repeatedly. This bot includes logic to randomize captions.
-3.  **Use the Official API.** This bot uses the Facebook Graph API. Do not use "scraper" or "browser automation" tools (like Selenium/Puppeteer) as they often trigger bans.
-4.  **Admin Rights.** The Page or User associated with the Access Token *must* be an Admin of the target groups, or the App must be installed in the group settings.
+## 📂 Project Structure
 
-## Features
-
--   **Multi-Group Support:** Posts to a configured list of Facebook Group IDs.
--   **Rich Media:** Posts images with captions (using the `/photos` edge).
--   **Latino Audience Focus:** Pre-configured with Spanish captions and cultural nuance.
--   **Smart Scheduling:** Uses `node-cron` for daily execution and includes random delays between posts to prevent rate-limiting.
--   **Error Handling:** Logs API errors without crashing the application.
-
-## Setup Instructions
-
-### 1. Prerequisites
--   Node.js installed on your machine.
--   A Facebook Developer Account.
--   A Facebook App with the `publish_to_groups` (if available/approved) or `pages_manage_posts` and `pages_read_engagement` permissions.
--   **Note:** Posting to groups via API now generally requires the bot to act as a **Page** that is an administrator of the group.
-
-### 2. Installation
-
-1.  Clone this repository or download the files.
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-
-### 3. Configuration
-
-Create a `.env` file in the root directory (or edit the defaults in `facebook_bot.js`) with the following variables:
-
-```env
-# Your Page Access Token (Long-lived token recommended)
-FB_ACCESS_TOKEN=your_access_token_here
-
-# Comma-separated list of Group IDs
-GROUP_IDS=123456789,987654321
-
-# Your WhatsApp contact link
-WHATSAPP_LINK=https://wa.me/3854766573
+```
+├── index.js          # Main entry point and scheduler
+├── package.json      # Dependencies and scripts
+├── src/
+│   ├── config.js     # Configuration settings
+│   ├── content.js    # Content generation logic
+│   ├── facebook.js   # Facebook Graph API integration
+│   └── logger.js     # Custom logging module ("Magistral Log")
+└── .env              # Environment variables (create this)
 ```
 
-### 4. Running the Bot
+## 🚀 Setup & Installation
 
-Start the bot:
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Configuration (.env)
+Create a `.env` file in the root directory:
+
+```env
+# Credentials
+FB_ACCESS_TOKEN=your_long_lived_access_token
+
+# Target Groups (comma separated)
+GROUP_IDS=123456789,987654321
+
+# Content
+WHATSAPP_LINK=https://wa.me/3854766573
+
+# Scheduling (Cron Syntax)
+CRON_SCHEDULE=0 10 * * *
+```
+
+### 3. Run the Bot
 ```bash
 npm start
 ```
-The bot will initialize and wait for the scheduled time (default is 10:00 AM daily). To test immediately, uncomment the `runDailyPostRoutine()` call at the bottom of `facebook_bot.js`.
 
----
+## 🛠️ Customization
 
-## Bot Operations Guide
+-   **Adding Services/Templates:** Edit `src/content.js`.
+-   **Changing Delays:** Edit `src/config.js` (`MIN_DELAY_MINUTES`, `MAX_DELAY_MINUTES`).
+-   **Logging:** Check `src/logger.js` to see how the "Magistral" logs are built.
 
-### Content Creation Strategy
--   **Captions:** The bot randomly selects from a set of pre-written, engaging Spanish templates (`generateCaption` function). To add more variety, edit the `templates` array in the code.
--   **Images:** The bot picks random images from the `IMAGES` array. **Action Required:** Replace the placeholder URLs in `facebook_bot.js` with actual URLs of your marketing images hosted online (e.g., on your website or a cloud bucket).
+## ⚠️ Compliance & Anti-Ban Strategy
 
-### Scheduling Posts
--   **Frequency:** The default is set to once per day at 10:00 AM. This is a safe frequency.
--   **Jitter/Delays:** The bot automatically waits 1-5 minutes between posting to different groups. This is crucial for mimicking human behavior and avoiding "bot" detection.
+This bot is built to respect Facebook's ecosystem:
+1.  **Rate Limiting:** It sleeps between posts (randomized 1-5 minutes) to mimic human behavior.
+2.  **Unique Content:** It rotates templates and images to avoid duplicate content detection.
+3.  **Official API:** It uses the standard Graph API, which is safer than browser automation.
 
-### Monitoring Engagement
--   **Logs:** The bot prints logs to the console (`[SUCCESS]` or `[ERROR]`). Monitor these logs to ensure posts are going through.
--   **Replies:** You must manually check the Facebook Groups for comments and replies. The API allows reading comments, but responding is best done manually or via a dedicated inbox management tool to ensure personal connection.
-
-### Troubleshooting
--   **Error: "(#200) If posting to a group, requires app being installed in the group"**: You must go to the Group Settings on Facebook > Apps > Add Apps and add your specific Facebook App.
--   **Error: "Token invalid/expired"**: Generate a new Long-Lived Access Token in the Facebook Graph API Explorer.
+**Note:** Ensure your Facebook Page is an admin of the groups you are posting to, or that your App is installed in the Group Settings.
